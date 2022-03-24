@@ -9,9 +9,15 @@ const origialPatientObject = {
 	symptoms: '',
 };
 
-export default function PatientForm({ onSubmit }) {
+export default function PatientForm({ onSubmit, patientToEdit }) {
 	const [ patientInfo, setPatientInfo ] = useState(origialPatientObject);
 	const [ error, setError ] = useState(false);
+
+	useEffect(() => {
+		if ( patientToEdit !== null ) {
+			setPatientInfo(patientToEdit);
+		}
+	}, [ patientToEdit ]);
 
 	const handleChange = ({ target: { name, value } }) => setPatientInfo({ ...patientInfo, [name]: value });
 
@@ -22,14 +28,25 @@ export default function PatientForm({ onSubmit }) {
 		if ( Object.values(patientInfo).includes('') ) return setError(true);
  
 		setError(false);
+
 		onSubmit(patientInfo);
 
 		// Reset the values
 		setPatientInfo(origialPatientObject);
 	}
 
+	const btnClasses = () => {
+		const classes = "cursor-pointer rounded-sm transition-all w-full p-3 text-white uppercase font-bold";
+
+		return (! patientToEdit ?
+			`${ classes } bg-green-600 hover:bg-green-700 active:bg-green-600`:
+			`${ classes } bg-blue-600 hover:bg-blue-700 active:bg-blue-600`
+		);
+	}
+
+
   	return (
-    	<div className="w-full lg:w-5/12">
+    	<div className="w-full md:max-w-xl md:mx-auto lg:w-5/12">
 			<h2 className="font-black text-3xl text-center">Patients follow-up</h2>
 
 			<p className="text-lg mt-5 text-center mb-10">
@@ -44,7 +61,7 @@ export default function PatientForm({ onSubmit }) {
 
 				{ error && <Error uppercase>All the fields are required</Error>}
 
-				<div className="md:grid md:grid-cols-[minmax(0,150px)_minmax(0,1fr)]">
+				<div className="md:grid md:grid-cols-[minmax(0,135px)_minmax(0,1fr)]">
 					<label
 					 	htmlFor="pet"
 						className="block text-gray-700 uppercase font-bold">Pet Name</label>
@@ -59,7 +76,7 @@ export default function PatientForm({ onSubmit }) {
 					/>
 				</div>
 
-				<div className="md:grid md:grid-cols-[minmax(0,150px)_minmax(0,1fr)]">
+				<div className="md:grid md:grid-cols-[minmax(0,135px)_minmax(0,1fr)]">
 					<label
 					 	htmlFor="owner"
 						className="block text-gray-700 uppercase font-bold">Owner name</label>
@@ -74,7 +91,7 @@ export default function PatientForm({ onSubmit }) {
 					/>
 				</div>
 
-				<div className="md:grid md:grid-cols-[minmax(0,150px)_minmax(0,1fr)]">
+				<div className="md:grid md:grid-cols-[minmax(0,135px)_minmax(0,1fr)]">
 					<label
 					 	htmlFor="email"
 						className="block text-gray-700 uppercase font-bold">E-mail</label>
@@ -89,7 +106,7 @@ export default function PatientForm({ onSubmit }) {
 					/>
 				</div>
 
-				<div className="md:grid md:grid-cols-[minmax(0,150px)_minmax(0,1fr)]">
+				<div className="md:grid md:grid-cols-[minmax(0,135px)_minmax(0,1fr)]">
 					<label
 					 	htmlFor="date"
 						className="block text-gray-700 uppercase font-bold">Date</label>
@@ -103,7 +120,7 @@ export default function PatientForm({ onSubmit }) {
 					/>
 				</div>
 
-				<div className="md:grid md:grid-cols-[minmax(0,150px)_minmax(0,1fr)]">
+				<div className="md:grid md:grid-cols-[minmax(0,135px)_minmax(0,1fr)]">
 					<label
 					 	htmlFor="symptoms"
 						className="block text-gray-700 uppercase font-bold">Symptoms</label>
@@ -119,8 +136,8 @@ export default function PatientForm({ onSubmit }) {
 
 				<input
 					type="submit"
-					className="bg-green-600 hover:bg-green-700 active:bg-green-600 cursor-pointer rounded-sm transition-all w-full p-3 text-white uppercase font-bold"
-					value="Add patient"/>
+					className={ btnClasses() }
+					value={ ! patientToEdit ? "Add patient" : "Edit Patient" }/>
 			</form>
 		</div>
   	)

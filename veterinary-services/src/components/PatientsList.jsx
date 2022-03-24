@@ -1,6 +1,6 @@
 import Patient from './Patient';
 
-export default function PatientsList({ patients }) {
+export default function PatientsList({ patients, onEdit, onDelete }) {
   	return (
 		<div className="w-full lg:w-7/12 ">
 			<h2 className="font-black text-3xl text-center">Your Patients list</h2>
@@ -11,7 +11,13 @@ export default function PatientsList({ patients }) {
 			</p>
 
 			<div className="space-y-4 md:h-screen md:overflow-y-auto md:pr-4">
-				{ patients.map((patient, index)=> ( <Patient patient={ patient } key={ index }/> ))}
+				{ patients.map(patient => (
+					<Patient
+						patient={ patient }
+						key={ patient.id }
+						onEdit={ onEdit }
+						onDelete={ onDelete }/>
+				)) }
 			</div>
 		</div>
 	)
